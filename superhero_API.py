@@ -6,47 +6,9 @@
 # Токен, который нужно использовать для доступа к API: 2619421814940190.
 # Таким образом, все адреса для доступа к API должны начинаться с https://superheroapi.com/api/2619421814940190/
 
-# import requests
-#
-# url = "https://superheroapi.com/api/2619421814940190/"
-#
-# def search_by_name(name):
-#     response = requests.get(url + 'search/' + name)
-#     return response.json()
-#
-#
-# def get_intelligence_param(info):
-#     response = requests.get(url + info['results'][0]['id'] + '/powerstats')
-#     return {'name': response.json()['name'], 'intelligence': response.json()['intelligence']}
-#
-#
-# def compare_intelligence(dict1, dict2, dict3):
-#     summary_hero_list = [dict1, dict2, dict3]
-#     sorted_hero_list = sorted(summary_hero_list, key=lambda k: k['intelligence'])
-#     return sorted_hero_list[0]['name']
-#
-#
-# hulk_info = search_by_name('Hulk')
-# captain_America_info = search_by_name('Captain America')
-# Thanos_info = search_by_name('Thanos')
-#
-# # print(hulk_info)
-# # print(captain_America_info)
-# # print(Thanos_info)
-#
-# hulk = get_intelligence_param(hulk_info)
-# captain_America = get_intelligence_param(captain_America_info)
-# thanos = get_intelligence_param(Thanos_info)
-#
-# # print(hulk)
-# # print(captain_America)
-# # print(thanos)
-#
-# super_smart_hero = compare_intelligence(hulk, captain_America, thanos)
-# print(super_smart_hero)
 
 import requests
-
+import operator
 
 hero_list_data = ['Hulk', 'Captain', 'America', 'Thanos']
 
@@ -56,14 +18,14 @@ def get_data(hero_list):
     for hero in hero_list:
         result = requests.get(f'https://www.superheroapi.com/api.php/2619421814940190/search/{hero}')
         result_data[result.json()['results'][0]['name']] = result.json()['results'][0]['powerstats']['intelligence']
-
-def compare_intelligence(dict1, dict2, dict3):
-    summary_hero_list = [dict1, dict2, dict3]
-    sorted_hero_list = sorted(summary_hero_list, key=lambda k: k['intelligence'])
-    return sorted_hero_list[0]['name']
-    #
-    # далее логика рачета и выод информации
     return result_data
 
+
+def compare_intelligence(dict1):
+    sorted_hero_list = sorted(dict1.items(), key=operator.itemgetter(1))
+    winner = sorted_hero_list[0][0]
+    return winner
+
+
 result = get_data(hero_list_data)
-print(result)
+print(compare_intelligence(result))
